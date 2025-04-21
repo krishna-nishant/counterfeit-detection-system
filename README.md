@@ -28,13 +28,11 @@ counterfeit-detection-system/
 │   ├── controllers/       # Request handlers
 │   ├── models/            # Database models 
 │   ├── routes/            # API routes
-│   ├── utils/             # Utility functions
 │   ├── .env               # Environment variables
 │   ├── package.json       # Backend dependencies
 │   └── server.js          # Server entry point
 ├── frontend/              # React Native mobile app
 │   ├── assets/            # Images and resources
-│   ├── components/        # Reusable UI components
 │   ├── screens/           # App screens
 │   ├── services/          # API services
 │   ├── App.js             # Main app component
@@ -53,38 +51,47 @@ counterfeit-detection-system/
 ### Prerequisites
 
 - Node.js (v14+)
-- MongoDB
+- MongoDB (for backend database)
 - npm or yarn
 - Expo CLI (for mobile app development)
+```bash
+npm install -g expo-cli
+```
 
 ### Installation
 
-1. Clone the repository
-```
-git clone https://github.com/krishna-nishant/counterfeit-detection-system.git
-cd counterfeit-detection-system
-```
+Install dependencies for each component:
 
-2. Install all dependencies
-```
-npm run install:all
+```bash
+# Backend
+cd backend
+npm install
+
+# Mobile App (frontend)
+cd ../frontend
+npm install
+
+# Admin Dashboard
+cd ../admin-dashboard
+npm install
 ```
 
 ### Running the System
 
-1. Start the backend server
-```
-npm run dev:backend
-```
+Start each component in separate terminals:
 
-2. Start the mobile app (in a new terminal)
-```
-npm run start:frontend
-```
+```bash
+# Start Backend Server
+cd backend
+npm run dev
 
-3. Start the admin dashboard (in a new terminal)
-```
-npm run start:admin
+# Start Mobile App (Expo)
+cd frontend
+npm start
+
+# Start Admin Dashboard
+cd admin-dashboard
+npm start
 ```
 
 ## How It Works
@@ -109,4 +116,3 @@ npm run start:admin
 - QR codes can only be verified once, preventing reuse
 - Location data is collected to detect unusual verification patterns
 - Scratch labels prevent scanning before purchase
-
