@@ -1,133 +1,110 @@
 import React from 'react';
-import { StyleSheet, View, ScrollView } from 'react-native';
-import { Button, Card, Title, Paragraph, List, Avatar, useTheme } from 'react-native-paper';
+import { View, StyleSheet, ScrollView } from 'react-native';
+import { Text, useTheme, Button, Surface } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const ResultScreen = ({ route, navigation }) => {
   const theme = useTheme();
-  const { success, message, product_info = {}, error } = route.params || {};
-
-  const renderProductInfo = () => {
-    if (!product_info || Object.keys(product_info).length === 0) {
-      return null;
-    }
-
-    return (
-      <Card style={styles.card}>
-        <Card.Content>
-          <Title>Product Information</Title>
-          {Object.entries(product_info).map(([key, value]) => (
-            <List.Item
-              key={key}
-              title={key.charAt(0).toUpperCase() + key.slice(1).replace('_', ' ')}
-              description={value.toString()}
-              left={() => <List.Icon icon="information" />}
-            />
-          ))}
-        </Card.Content>
-      </Card>
-    );
-  };
+  const { success, message, product_info = {} } = route.params || {};
 
   return (
-    <ScrollView style={styles.container}>
-      <Card style={[styles.resultCard, success ? styles.successCard : styles.errorCard]}>
-        <Card.Content style={styles.resultContent}>
-          <Avatar.Icon 
-            size={80} 
-            icon={success ? 'check-circle' : 'alert-circle'} 
-            style={{ backgroundColor: 'transparent' }}
-            color={success ? theme.colors.success : theme.colors.error}
-          />
-          <Title style={styles.resultTitle}>{success ? 'Verified' : 'Not Verified'}</Title>
-          <Paragraph style={styles.resultMessage}>{message}</Paragraph>
-        </Card.Content>
-      </Card>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Surface style={styles.card}>
+        <MaterialCommunityIcons
+          name={success ? 'check-circle' : 'alert-circle'}
+          size={64}
+          color={success ? theme.colors.success : theme.colors.error}
+        />
+        <Text style={[styles.title, { color: success ? theme.colors.success : theme.colors.error }]}>
+          {success ? 'Product Verified' : 'Verification Failed'}
+        </Text>
+        <Text style={styles.message}>{message}</Text>
 
-      {success && renderProductInfo()}
+        {success && (
+          <View style={styles.infoSection}>
+            <Text style={styles.label}>Product Name</Text>
+            <Text style={styles.value}>{product_info.name || 'N/A'}</Text>
 
-      {error && (
-        <Card style={styles.card}>
-          <Card.Content>
-            <List.Item
-              title="What does this mean?"
-              description="This could mean the product is counterfeit, the QR code has already been used, or there was a technical issue."
-              left={() => <List.Icon icon="help-circle" />}
-            />
-            <List.Item
-              title="What should I do?"
-              description="If you suspect a counterfeit product, don't purchase it or contact the manufacturer for verification."
-              left={() => <List.Icon icon="alert" />}
-            />
-          </Card.Content>
-        </Card>
-      )}
+            <Text style={styles.label}>Brand</Text>
+            <Text style={styles.value}>{product_info.brand || 'N/A'}</Text>
 
-      <View style={styles.buttonContainer}>
+            <Text style={styles.label}>Manufacturing Date</Text>
+            <Text style={styles.value}>{product_info.mfg_date || 'N/A'}</Text>
+
+            <Text style={styles.label}>Batch No.</Text>
+            <Text style={styles.value}>{product_info.batch_no || 'N/A'}</Text>
+          </View>
+        )}
+
         <Button
           mode="contained"
-          icon="home"
           onPress={() => navigation.navigate('Home')}
-          style={styles.button}
-        >
-          Back to Home
-        </Button>
-        <Button
-          mode="outlined"
-          icon="qrcode-scan"
-          onPress={() => navigation.navigate('Scanner')}
-          style={styles.button}
+          style={[styles.button, { backgroundColor: theme.colors.primary }]}
         >
           Scan Another
         </Button>
-      </View>
+
+        <Button
+          mode="outlined"
+          onPress={() => navigation.navigate('Scanner')}
+          style={[styles.button, { borderColor: theme.colors.primary, borderWidth: 1.5 }]}
+        >
+          Retry
+        </Button>
+      </Surface>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  resultCard: {
-    margin: 15,
-    padding: 10,
-    elevation: 4,
-  },
-  successCard: {
-    backgroundColor: '#e8f5e9',
-  },
-  errorCard: {
-    backgroundColor: '#ffebee',
-  },
-  resultContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
-  },
-  resultTitle: {
-    fontSize: 24,
-    marginTop: 10,
-    fontWeight: 'bold',
-  },
-  resultMessage: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginTop: 5,
+    backgroundColor: '#f9fafb',
+    padding: 24,
   },
   card: {
-    margin: 15,
-    elevation: 3,
+    width: '100%',
+    padding: 24,
+    borderRadius: 16,
+    alignItems: 'center',
+    backgroundColor: 'white',
+    elevation: 6,
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    padding: 15,
-    marginBottom: 20,
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginTop: 16,
+  },
+  message: {
+    fontSize: 16,
+    color: '#4b5563',
+    marginVertical: 12,
+    textAlign: 'center',
+    lineHeight: 22,
+  },
+  infoSection: {
+    marginVertical: 16,
+    width: '100%',
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#6b7280',
+    marginBottom: 4,
+  },
+  value: {
+    fontSize: 16,
+    color: '#1f2937',
+    marginBottom: 12,
   },
   button: {
-    width: '45%',
+    width: '100%',
+    marginTop: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
   },
 });
 
-export default ResultScreen; 
+export default ResultScreen;

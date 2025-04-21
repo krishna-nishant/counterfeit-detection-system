@@ -1,213 +1,158 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Box, 
-  Card, 
-  CardContent, 
-  CircularProgress, 
-  Container, 
-  Grid, 
-  Paper,
-  Typography 
-} from '@mui/material';
-import { getStats } from '../services/api';
-import { Bar, Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+"use client"
 
-// Register ChartJS components
-ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+import { useState, useEffect } from "react"
+import { getStats } from "../services/api"
+import { Bar, Pie } from "react-chartjs-2"
 
 const Statistics = () => {
-  const [statsData, setStatsData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [statsData, setStatsData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await getStats();
-        setStatsData(response.data);
-        setLoading(false);
+        const response = await getStats()
+        setStatsData(response.data)
+        setLoading(false)
       } catch (error) {
-        console.error('Error fetching statistics:', error);
-        setError('Failed to load statistics. Please try again later.');
-        setLoading(false);
+        console.error("Error fetching statistics:", error)
+        setError("Failed to load statistics. Please try again later.")
+        setLoading(false)
       }
-    };
+    }
 
-    fetchStats();
-  }, []);
+    fetchStats()
+  }, [])
 
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-        <CircularProgress />
-      </Box>
-    );
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    )
   }
 
   if (error) {
     return (
-      <Box sx={{ mt: 4, textAlign: 'center' }}>
-        <Typography color="error">{error}</Typography>
-      </Box>
-    );
+      <div className="text-center my-8">
+        <p className="text-red-500 font-medium">{error}</p>
+      </div>
+    )
   }
 
   // Prepare data for QR code usage chart
   const qrCodeUsageData = {
-    labels: ['Used', 'Unused'],
+    labels: ["Used", "Unused"],
     datasets: [
       {
         data: [statsData.usedQRCodes, statsData.unusedQRCodes],
-        backgroundColor: ['#4caf50', '#2196f3'],
-        hoverBackgroundColor: ['#388e3c', '#1976d2'],
+        backgroundColor: ["#10b981", "#3b82f6"],
+        hoverBackgroundColor: ["#059669", "#2563eb"],
       },
     ],
-  };
+  }
 
   // Prepare data for scan statistics chart
   const scanStatsData = {
-    labels: ['Authentic Scans', 'Counterfeit Scan Attempts'],
+    labels: ["Authentic Scans", "Counterfeit Scan Attempts"],
     datasets: [
       {
         data: [statsData.authenticScans, statsData.counterfeitScanAttempts],
-        backgroundColor: ['#4caf50', '#f44336'],
-        hoverBackgroundColor: ['#388e3c', '#d32f2f'],
+        backgroundColor: ["#10b981", "#ef4444"],
+        hoverBackgroundColor: ["#059669", "#dc2626"],
       },
     ],
-  };
+  }
 
   // Prepare data for regional distribution
-  const regions = statsData.regionalData.map(item => item._id || 'Unknown');
-  const regionCounts = statsData.regionalData.map(item => item.count);
+  const regions = statsData.regionalData.map((item) => item._id || "Unknown")
+  const regionCounts = statsData.regionalData.map((item) => item.count)
 
   const regionalData = {
     labels: regions,
     datasets: [
       {
-        label: 'Number of Scans',
+        label: "Number of Scans",
         data: regionCounts,
-        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+        backgroundColor: "rgba(59, 130, 246, 0.8)",
       },
     ],
-  };
+  }
 
   return (
-    <Container maxWidth="lg">
-      <Typography variant="h4" gutterBottom>
-        Dashboard Statistics
-      </Typography>
+    <div className="container mx-auto">
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">Dashboard Statistics</h1>
 
       {/* Summary Cards */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card sx={{ height: '100%' }}>
-            <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                Total QR Codes
-              </Typography>
-              <Typography variant="h4">
-                {statsData.totalQRCodes}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card sx={{ height: '100%' }}>
-            <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                Used QR Codes
-              </Typography>
-              <Typography variant="h4">
-                {statsData.usedQRCodes}
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                {Math.round(statsData.usagePercentage)}% of total
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card sx={{ height: '100%' }}>
-            <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                Total Scans
-              </Typography>
-              <Typography variant="h4">
-                {statsData.totalScans}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card sx={{ height: '100%' }}>
-            <CardContent>
-              <Typography color="textSecondary" gutterBottom>
-                Counterfeit Attempts
-              </Typography>
-              <Typography variant="h4" color="error">
-                {statsData.counterfeitScanAttempts}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <p className="text-sm font-medium text-gray-500 mb-1">Total QR Codes</p>
+          <p className="text-3xl font-bold text-gray-800">{statsData.totalQRCodes}</p>
+        </div>
+
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <p className="text-sm font-medium text-gray-500 mb-1">Used QR Codes</p>
+          <p className="text-3xl font-bold text-gray-800">{statsData.usedQRCodes}</p>
+          <p className="text-sm text-gray-500 mt-1">{Math.round(statsData.usagePercentage)}% of total</p>
+        </div>
+
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <p className="text-sm font-medium text-gray-500 mb-1">Total Scans</p>
+          <p className="text-3xl font-bold text-gray-800">{statsData.totalScans}</p>
+        </div>
+
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <p className="text-sm font-medium text-gray-500 mb-1">Counterfeit Attempts</p>
+          <p className="text-3xl font-bold text-red-500">{statsData.counterfeitScanAttempts}</p>
+        </div>
+      </div>
 
       {/* Charts */}
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
-          <Paper elevation={3} sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              QR Code Usage
-            </Typography>
-            <Box sx={{ height: 300 }}>
-              <Pie data={qrCodeUsageData} options={{ maintainAspectRatio: false }} />
-            </Box>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Paper elevation={3} sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Scan Statistics
-            </Typography>
-            <Box sx={{ height: 300 }}>
-              <Pie data={scanStatsData} options={{ maintainAspectRatio: false }} />
-            </Box>
-          </Paper>
-        </Grid>
-        <Grid item xs={12}>
-          <Paper elevation={3} sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Regional Distribution
-            </Typography>
-            <Box sx={{ height: 400 }}>
-              <Bar 
-                data={regionalData} 
-                options={{ 
-                  maintainAspectRatio: false,
-                  scales: {
-                    y: {
-                      beginAtZero: true,
-                      title: {
-                        display: true,
-                        text: 'Number of Scans'
-                      }
-                    },
-                    x: {
-                      title: {
-                        display: true,
-                        text: 'Region'
-                      }
-                    }
-                  }
-                }} 
-              />
-            </Box>
-          </Paper>
-        </Grid>
-      </Grid>
-    </Container>
-  );
-};
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <h2 className="text-lg font-bold text-gray-800 mb-4">QR Code Usage</h2>
+          <div className="h-64">
+            <Pie data={qrCodeUsageData} options={{ maintainAspectRatio: false }} />
+          </div>
+        </div>
 
-export default Statistics; 
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <h2 className="text-lg font-bold text-gray-800 mb-4">Scan Statistics</h2>
+          <div className="h-64">
+            <Pie data={scanStatsData} options={{ maintainAspectRatio: false }} />
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 mb-8">
+        <h2 className="text-lg font-bold text-gray-800 mb-4">Regional Distribution</h2>
+        <div className="h-80">
+          <Bar
+            data={regionalData}
+            options={{
+              maintainAspectRatio: false,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: {
+                    display: true,
+                    text: "Number of Scans",
+                  },
+                },
+                x: {
+                  title: {
+                    display: true,
+                    text: "Region",
+                  },
+                },
+              },
+            }}
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default Statistics

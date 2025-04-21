@@ -12,24 +12,27 @@ import ResultScreen from './screens/ResultScreen';
 
 const Stack = createNativeStackNavigator();
 
-// Custom theme
+// Custom theme that matches the admin dashboard
 const theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#3498db',
-    accent: '#f1c40f',
-    background: '#f9f9f9',
+    primary: '#3b82f6', // Blue 500
+    accent: '#60a5fa', // Blue 400
+    background: '#f9fafb', // Gray 50
     surface: '#ffffff',
-    text: '#333333',
-    error: '#e74c3c',
-    success: '#2ecc71',
+    text: '#1f2937', // Gray 800
+    error: '#ef4444', // Red 500
+    success: '#10b981', // Green 500
+    secondary: '#f3f4f6', // Gray 100
+    border: '#e5e7eb', // Gray 200
   },
+  roundness: 12,
 };
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
-
+  
   useEffect(() => {
     // Simulate a short loading time for better UX
     const timer = setTimeout(() => {
@@ -61,14 +64,18 @@ export default function App() {
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
-              fontWeight: 'bold',
+              fontWeight: '500',
             },
+            headerShadowVisible: false,
+            contentStyle: {
+              backgroundColor: theme.colors.background,
+            }
           }}
         >
           <Stack.Screen 
             name="Home" 
             component={HomeScreen} 
-            options={{ title: 'Counterfeit Product Detection' }} 
+            options={{ title: 'Counterfeit Detection' }} 
           />
           <Stack.Screen 
             name="Scanner" 
@@ -81,7 +88,7 @@ export default function App() {
             options={{ title: 'Verification Result' }} 
           />
         </Stack.Navigator>
-        <StatusBar style="auto" />
+        <StatusBar style="light" />
       </NavigationContainer>
     </PaperProvider>
   );
@@ -92,10 +99,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#f9fafb',
   },
   loadingText: {
-    marginTop: 10,
+    marginTop: 16,
     fontSize: 16,
+    color: '#1f2937',
   }
-}); 
+});
