@@ -1,0 +1,54 @@
+{
+  "expo": {
+    "name": "Counterfeit Detection",
+    "slug": "counterfeit-detection-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.counterfeit.detector",
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses the camera to scan QR codes for product verification."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.counterfeit.detector",
+      "permissions": [
+        "CAMERA"
+      ]
+    },
+    "extra": {
+      "eas": {
+        "projectId": "counterfeit-detection-app"
+      }
+    },
+    "jsEngine": "hermes",
+    "experimental": {
+      "bridgeless": false
+    },
+    "newArchEnabled": true,
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/counterfeit-detection-app"
+    },
+    "plugins": [
+      "expo-barcode-scanner"
+    ]
+  }
+}
