@@ -28,12 +28,15 @@
       },
       "package": "com.counterfeit.detector",
       "permissions": [
-        "CAMERA"
+        "CAMERA",
+        "android.permission.CAMERA",
+        "CAMERA",
+        "android.permission.CAMERA"
       ]
     },
     "extra": {
       "eas": {
-        "projectId": "counterfeit-detection-app"
+        "projectId": "4d15c18d-cd8d-455e-94e3-0329f434cf24"
       }
     },
     "jsEngine": "hermes",
@@ -41,14 +44,13 @@
       "bridgeless": false
     },
     "newArchEnabled": true,
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/counterfeit-detection-app"
-    },
+    "runtimeVersion": "1.0.0",
     "plugins": [
       "expo-barcode-scanner"
-    ]
+    ],
+    "owner": "krishna-nishant",
+    "updates": {
+      "url": "https://u.expo.dev/4d15c18d-cd8d-455e-94e3-0329f434cf24"
+    }
   }
 }
